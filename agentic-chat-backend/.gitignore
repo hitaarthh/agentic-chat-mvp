@@ -1,0 +1,31 @@
+node_modules/
+
+# Env files (keep example tracked)
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/
+
+# Builds / Coverage
+build/
+dist/
+.next/
+.turbo/
+coverage/
+
+# Misc
+.tmp/
+.temp/
+.vercel/
+
+

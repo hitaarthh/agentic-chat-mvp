@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Terminal-inspired dark theme */
+    --background: 0 0% 4%;
+    --foreground: 120 100% 90%;
+
+    --card: 0 0% 8%;
+    --card-foreground: 120 100% 90%;
+
+    --popover: 0 0% 8%;
+    --popover-foreground: 120 100% 90%;
+
+    --primary: 120 100% 50%;
+    --primary-foreground: 0 0% 4%;
+
+    --secondary: 180 100% 50%;
+    --secondary-foreground: 0 0% 4%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 120 50% 60%;
+
+    --accent: 180 100% 50%;
+    --accent-foreground: 0 0% 4%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 12%;
+    --ring: 120 100% 50%;
+
+    --radius: 0.5rem;
+
+    /* Terminal-specific colors */
+    --terminal-bg: 0 0% 4%;
+    --terminal-fg: 120 100% 50%;
+    --terminal-cyan: 180 100% 50%;
+    --terminal-amber: 45 100% 60%;
+    --terminal-red: 0 100% 60%;
+    --terminal-border: 0 0% 20%;
+    
+    /* Terminal glow effect */
+    --terminal-glow: 0 0 20px hsl(120 100% 50% / 0.3);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+  }
+
+  /* Terminal-specific utilities */
+  .terminal-text {
+    @apply font-mono text-sm;
+    color: hsl(var(--terminal-fg));
+    text-shadow: var(--terminal-glow);
+  }
+
+  .terminal-bg {
+    background-color: hsl(var(--terminal-bg));
+    border: 1px solid hsl(var(--terminal-border));
+  }
+
+  /* Resize handle */
+  .resize-handle {
+    @apply cursor-ns-resize;
+    transition: all 0.2s ease;
+  }
+
+  .resize-handle:hover {
+    background: hsl(var(--terminal-cyan) / 0.2);
+    box-shadow: 0 0 10px hsl(var(--terminal-cyan) / 0.5);
+  }
+
+  .resize-handle:active {
+    background: hsl(var(--terminal-cyan) / 0.4);
+  }
+
+  /* Scrollbar styling for terminal */
+  .terminal-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .terminal-scroll::-webkit-scrollbar-track {
+    background: hsl(var(--terminal-bg));
+  }
+
+  .terminal-scroll::-webkit-scrollbar-thumb {
+    background: hsl(var(--terminal-border));
+    border-radius: 4px;
+  }
+
+  .terminal-scroll::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--terminal-fg) / 0.3);
+  }
+}
