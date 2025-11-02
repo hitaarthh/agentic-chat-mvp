@@ -1,4 +1,4 @@
-# Agentic Response
+# Agentic Chat Application
 
 A terminal-style chat interface with real-time streaming logs. Built with React, TypeScript, and Tailwind CSS.
 

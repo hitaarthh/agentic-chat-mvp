@@ -422,7 +422,7 @@ export const ChatInterface = () => {
     <div ref={containerRef} className="flex flex-col h-screen bg-background">
       <div className="border-b border-border bg-card px-4 py-3">
         <div className="flex items-center justify-center">
-          <h2 className="text-xl font-bold terminal-text">Agent Response</h2>
+          <h2 className="text-xl font-bold terminal-text">Agentic Chat Application</h2>
         </div>
       </div>
 
