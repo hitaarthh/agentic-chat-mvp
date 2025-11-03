@@ -1,0 +1,20 @@
+{
+  "name": "agentic-chat-fullstack",
+  "version": "1.0.0",
+  "description": "Fullstack agentic chat application - run both frontend and backend together",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n \"backend,frontend\" -c \"cyan,magenta\" \"npm run backend\" \"npm run frontend\"",
+    "start": "npm run dev",
+    "backend": "cd agentic-chat-backend && npm start",
+    "frontend": "cd agentic-response-frontend && npm run dev",
+    "install:all": "npm install && cd agentic-chat-backend && npm install && cd ../agentic-response-frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
