@@ -335,9 +335,54 @@ export const ChatInterface = () => {
         description: data.error,
         variant: "destructive",
       });
+
+      // Add server logs if they exist in error response
+      if (data.logs && Array.isArray(data.logs)) {
+        data.logs.forEach((logMessage) => {
+          addServerLog(logMessage);
+        });
+      }
     } else {
-      const responseText = data.response || "Sorry, I didn't receive a response. Please try again.";
-      setMessages((prev) => [...prev, { role: "assistant", content: responseText }]);
+      // Handle both string and object responses
+      const responseText = typeof data.response === 'string'
+        ? data.response
+        : data.response?.content || "Sorry, I didn't receive a response. Please try again.";
+
+      if (responseText && responseText.trim()) {
+        setMessages((prev) => [...prev, { role: "assistant", content: responseText }]);
+      } else {
+        setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, I didn't receive a response. Please try again." }]);
+      }
+
+      // Add server logs if they exist
+      if (data.logs && Array.isArray(data.logs)) {
+        data.logs.forEach((logMessage) => {
+          addServerLog(logMessage);
+        });
+      }
+
+      // Add AI response events if they exist (for AI Response panel)
+      if (data.aiEvents && Array.isArray(data.aiEvents)) {
+        data.aiEvents.forEach((event) => {
+          if (event.type === 'tool_call') {
+            addLog('tool_call', event.tool || 'unknown');
+          } else if (event.type === 'tool_executing') {
+            const argsStr = event.args ? JSON.stringify(event.args) : '';
+            addLog('tool_executing', `${event.tool || 'unknown'}(${argsStr.substring(0, 80)}...)`);
+          } else if (event.type === 'tool_result') {
+            const truncated = typeof event.result === 'string'
+              ? event.result.substring(0, 100)
+              : JSON.stringify(event.result).substring(0, 100);
+            addLog('tool_result', truncated + (truncated.length >= 100 ? '...' : ''));
+          } else if (event.type === 'reasoning') {
+            addLog('reasoning', event.content || '');
+          } else if (event.type === 'content') {
+            addLog('content', event.content || '');
+          } else if (event.type === 'done') {
+            addLog('done', 'Request completed');
+          }
+        });
+      }
     }
   };
 
@@ -384,7 +429,13 @@ export const ChatInterface = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        if (errorData.logs && Array.isArray(errorData.logs)) {
+          errorData.logs.forEach((logMessage) => {
+            addServerLog(logMessage);
+          });
+        }
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
       if (streamingEnabled) {

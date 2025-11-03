@@ -50,15 +50,49 @@ app.post('/chat', async (req, res) => {
       sendServerLog(res, 'Request completed successfully');
       res.end();
     } else {
-      const response = await orchestrator.execute(messages, { stream: false });
+      const logs = [];
+      const aiEvents = [];
+      
+      // Add initial log
+      logs.push('New chat request received');
+      
+      const logCallback = (message) => {
+        logs.push(message);
+      };
+      
+      const aiEventCallback = (event) => {
+        aiEvents.push(event);
+      };
+      
+      const response = await orchestrator.execute(messages, { 
+        stream: false,
+        logCallback: logCallback,
+        aiEventCallback: aiEventCallback
+      });
+      
       console.log('\nRequest completed successfully\n');
-      res.json({ response });
+      logs.push('Request completed successfully');
+      aiEvents.push({ type: 'done' });
+      
+      // Ensure response is always a string
+      const responseText = response || "Sorry, I didn't receive a response. Please try again.";
+      
+      res.json({ 
+        response: responseText,
+        logs,
+        aiEvents
+      });
     }
   } catch (err) {
     console.error(`\nRequest failed: ${err.message}\n`);
-    sendServerLog(res, `Request failed: ${err.message}`);
+    if (stream) {
+      sendServerLog(res, `Request failed: ${err.message}`);
+    }
     if (!res.headersSent) {
-      res.status(err?.status || 500).json({ error: err?.message || 'Unexpected error' });
+      res.status(err?.status || 500).json({ 
+        error: err?.message || 'Unexpected error',
+        logs: stream ? undefined : [`Request failed: ${err.message}`]
+      });
     }
   }
 });
